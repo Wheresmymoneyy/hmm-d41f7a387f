@@ -1,0 +1,303 @@
+{
+  "_nota": "Lista de lo que muestra la app. Para agregar una empresa: copia una entrada parecida y cambia sym (clave en Yahoo Finance; las mexicanas terminan en .MX), name, sub, plat y group (etf, us, mx o jp). fh:true solo si cotiza en EE. UU. (precio en vivo con Finnhub). analistas: de dónde toma la revisión semanal la opinión de los analistas.",
+  "items": [
+    {
+      "sym": "CETES",
+      "kind": "cetes",
+      "name": "CETES",
+      "sub": "Préstamo al gobierno de México",
+      "plat": [
+        "cetesdirecto"
+      ],
+      "group": "etf"
+    },
+    {
+      "sym": "VT",
+      "kind": "etf",
+      "name": "VT",
+      "sub": "~9,000 empresas de todo el mundo",
+      "plat": [
+        "GBM",
+        "Plata"
+      ],
+      "group": "etf",
+      "fh": true
+    },
+    {
+      "sym": "VOO",
+      "kind": "etf",
+      "name": "VOO",
+      "sub": "Las 500 empresas más grandes de EE. UU.",
+      "plat": [
+        "GBM",
+        "Plata"
+      ],
+      "group": "etf",
+      "fh": true
+    },
+    {
+      "sym": "NAFTRAC.MX",
+      "tk": "NAFTRAC",
+      "kind": "etf",
+      "name": "NAFTRAC",
+      "sub": "Las ~35 empresas más grandes de México",
+      "plat": [
+        "GBM"
+      ],
+      "group": "etf"
+    },
+    {
+      "sym": "NVDA",
+      "kind": "stk",
+      "name": "Nvidia",
+      "sub": "Chips para inteligencia artificial",
+      "plat": [
+        "GBM",
+        "Plata"
+      ],
+      "group": "us",
+      "fh": true,
+      "analistas": "stockanalysis:nvda"
+    },
+    {
+      "sym": "AAPL",
+      "kind": "stk",
+      "name": "Apple",
+      "sub": "iPhone, Mac y servicios",
+      "plat": [
+        "GBM",
+        "Plata"
+      ],
+      "group": "us",
+      "fh": true,
+      "analistas": "stockanalysis:aapl"
+    },
+    {
+      "sym": "MSFT",
+      "kind": "stk",
+      "name": "Microsoft",
+      "sub": "Windows, nube Azure e inteligencia artificial",
+      "plat": [
+        "GBM",
+        "Plata"
+      ],
+      "group": "us",
+      "fh": true,
+      "analistas": "stockanalysis:msft"
+    },
+    {
+      "sym": "AMZN",
+      "kind": "stk",
+      "name": "Amazon",
+      "sub": "Comercio en línea y nube AWS",
+      "plat": [
+        "GBM",
+        "Plata"
+      ],
+      "group": "us",
+      "fh": true,
+      "analistas": "stockanalysis:amzn"
+    },
+    {
+      "sym": "GOOGL",
+      "kind": "stk",
+      "name": "Alphabet (Google)",
+      "sub": "Buscador, YouTube, Android y nube",
+      "plat": [
+        "GBM",
+        "Plata"
+      ],
+      "group": "us",
+      "fh": true,
+      "analistas": "stockanalysis:googl"
+    },
+    {
+      "sym": "META",
+      "kind": "stk",
+      "name": "Meta",
+      "sub": "Facebook, Instagram y WhatsApp",
+      "plat": [
+        "GBM",
+        "Plata"
+      ],
+      "group": "us",
+      "fh": true,
+      "analistas": "stockanalysis:meta"
+    },
+    {
+      "sym": "AVGO",
+      "kind": "stk",
+      "name": "Broadcom",
+      "sub": "Chips y software para redes y centros de datos",
+      "plat": [
+        "GBM",
+        "Plata"
+      ],
+      "group": "us",
+      "fh": true,
+      "analistas": "stockanalysis:avgo"
+    },
+    {
+      "sym": "TSLA",
+      "kind": "stk",
+      "name": "Tesla",
+      "sub": "Autos eléctricos, baterías y robótica",
+      "plat": [
+        "GBM",
+        "Plata"
+      ],
+      "group": "us",
+      "fh": true,
+      "analistas": "stockanalysis:tsla"
+    },
+    {
+      "sym": "MU",
+      "kind": "stk",
+      "name": "Micron",
+      "sub": "Chips de memoria",
+      "plat": [
+        "GBM",
+        "Plata"
+      ],
+      "group": "us",
+      "fh": true,
+      "analistas": "stockanalysis:mu"
+    },
+    {
+      "sym": "ORCL",
+      "kind": "stk",
+      "name": "Oracle",
+      "sub": "Bases de datos, software y nube para empresas",
+      "plat": [
+        "GBM",
+        "Plata"
+      ],
+      "group": "us",
+      "fh": true,
+      "analistas": "stockanalysis:orcl"
+    },
+    {
+      "sym": "UBER",
+      "kind": "stk",
+      "name": "Uber",
+      "sub": "Viajes, Uber Eats y entregas",
+      "plat": [
+        "GBM",
+        "Plata"
+      ],
+      "group": "us",
+      "fh": true,
+      "analistas": "stockanalysis:uber"
+    },
+    {
+      "sym": "GMEXICOB.MX",
+      "tk": "GMEXICO B",
+      "kind": "stk",
+      "name": "Grupo México",
+      "sub": "Minería (sobre todo cobre) y ferrocarriles",
+      "plat": [
+        "GBM"
+      ],
+      "group": "mx",
+      "analistas": "investing:https://www.investing.com/equities/gmexico"
+    },
+    {
+      "sym": "GFNORTEO.MX",
+      "tk": "GFNORTE O",
+      "kind": "stk",
+      "name": "Banorte",
+      "sub": "Banco y seguros",
+      "plat": [
+        "GBM"
+      ],
+      "group": "mx",
+      "analistas": "buscar"
+    },
+    {
+      "sym": "AMXB.MX",
+      "tk": "AMX B",
+      "kind": "stk",
+      "name": "América Móvil",
+      "sub": "Telcel, Telmex y Claro",
+      "plat": [
+        "GBM"
+      ],
+      "group": "mx",
+      "analistas": "stockanalysis-adr:amx"
+    },
+    {
+      "sym": "FEMSAUBD.MX",
+      "tk": "FEMSA UBD",
+      "kind": "stk",
+      "name": "FEMSA",
+      "sub": "OXXO, Spin y embotelladora de Coca-Cola",
+      "plat": [
+        "GBM"
+      ],
+      "group": "mx",
+      "analistas": "stockanalysis-adr:fmx"
+    },
+    {
+      "sym": "CEMEXCPO.MX",
+      "tk": "CEMEX CPO",
+      "kind": "stk",
+      "name": "Cemex",
+      "sub": "Cemento y materiales de construcción",
+      "plat": [
+        "GBM"
+      ],
+      "group": "mx",
+      "analistas": "stockanalysis-adr:cx"
+    },
+    {
+      "sym": "WALMEX.MX",
+      "tk": "WALMEX *",
+      "kind": "stk",
+      "name": "Walmex",
+      "sub": "Walmart de México y Centroamérica",
+      "plat": [
+        "GBM"
+      ],
+      "group": "mx",
+      "analistas": "investing:https://www.investing.com/equities/wal-mart-v"
+    },
+    {
+      "sym": "EWJ",
+      "kind": "etf",
+      "name": "EWJ",
+      "sub": "~180 empresas más grandes de Japón",
+      "plat": [
+        "GBM",
+        "Plata"
+      ],
+      "group": "jp",
+      "fh": true
+    },
+    {
+      "sym": "TM",
+      "kind": "stk",
+      "name": "Toyota",
+      "sub": "El mayor fabricante de autos del mundo",
+      "plat": [
+        "GBM",
+        "Plata"
+      ],
+      "group": "jp",
+      "fh": true,
+      "analistas": "stockanalysis:tm"
+    },
+    {
+      "sym": "SONY",
+      "kind": "stk",
+      "name": "Sony",
+      "sub": "PlayStation, música, cine y sensores de cámara",
+      "plat": [
+        "GBM",
+        "Plata"
+      ],
+      "group": "jp",
+      "fh": true,
+      "analistas": "stockanalysis:sony"
+    }
+  ]
+}

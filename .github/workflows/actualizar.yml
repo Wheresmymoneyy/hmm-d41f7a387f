@@ -1,0 +1,42 @@
+# Regenera la app con los cierres del día (5 años de historia) y las opiniones de expertos.
+# Corre al cierre de cada día de bolsa y cada vez que cambia algo en motor/ (por ejemplo,
+# cuando se agrega una empresa o la revisión semanal actualiza expertos.json).
+name: Actualizar la app
+
+on:
+  schedule:
+    # 22:15 UTC = 4:15 p. m. hora del centro de México, después del cierre todo el año.
+    - cron: "15 22 * * 1-5"
+  push:
+    paths:
+      - "motor/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publicar
+  cancel-in-progress: false
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Regenerar index.html
+        run: python motor/actualizar.py --web
+      - name: Publicar
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then echo "Sin cambios"; exit 0; fi
+          fecha=$(grep -o '"asof":"[0-9-]*"' index.html | head -1 | cut -d'"' -f4)
+          git commit -q -m "Datos al ${fecha}"
+          git pull -q --rebase origin main
+          git push -q origin main

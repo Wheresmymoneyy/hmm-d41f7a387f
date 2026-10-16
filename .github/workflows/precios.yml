@@ -1,0 +1,38 @@
+# Cada 15 minutos, mientras la bolsa está abierta (lunes a viernes), guarda el último precio
+# de cada símbolo en precios.json. La app lo lee sola. No necesita la Mac encendida.
+name: Precios cada 15 minutos
+
+on:
+  schedule:
+    # Hora UTC. La bolsa abre de 13:30 a 20:00 UTC en horario de verano de EE. UU.
+    # y de 14:30 a 21:00 UTC el resto del año; este rango cubre ambos.
+    - cron: "*/15 13-21 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publicar
+  cancel-in-progress: false
+
+jobs:
+  precios:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Bajar precios
+        run: python motor/precios.py
+      - name: Publicar si cambiaron
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add precios.json
+          if git diff --cached --quiet; then echo "Sin cambios"; exit 0; fi
+          git commit -q -m "Precios $(date -u +%H:%M) UTC"
+          git pull -q --rebase origin main
+          git push -q origin main

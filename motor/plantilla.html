@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>How's my money?</title>
+<link rel="icon" href="__LOGO__">
+<link rel="apple-touch-icon" href="__LOGO__">
+<!--WEB-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* Layout: una columna (máx. 980px); mosaico de tarjetas en "Hoy", ficha detallada en "Explorar"; barra inferior en celular. */
+:root{
+  --bg:#f3f6f5; --surface:#ffffff; --surface-2:#e8eeec; --line:#d3dcd9;
+  --ink:#13211f; --ink-2:#4a5b58; --accent:#0e6f62; --accent-ink:#ffffff; --accent-soft:#d6ece7;
+  --up:#1f7a3d; --down:#b3261e; --up-soft:#e2f2e7; --down-soft:#f9e1df; --warn:#9a6200; --warn-soft:#fbefd6;
+  --sb:#14633a; --b:#4fa36b; --h:#b7a35a; --s:#d77a5f; --ss:#a8322a; --sma:#8a6d00;
+  --f-display:"Familjen Grotesk","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --f-data:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --r:12px; color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1716; --surface:#16211f; --surface-2:#1d2a28; --line:#2c3d3a;
+  --ink:#e6efed; --ink-2:#9fb3af; --accent:#4cc3ad; --accent-ink:#06201b; --accent-soft:#173a34;
+  --up:#6fd18f; --down:#ff8a80; --up-soft:#163222; --down-soft:#3d1a18; --warn:#f0b44c; --warn-soft:#3a2c10;
+  --sb:#3fae6a; --b:#86cf9c; --h:#d8c57a; --s:#f0a189; --ss:#ff6b5e; --sma:#e0c04a; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0f1716; --surface:#16211f; --surface-2:#1d2a28; --line:#2c3d3a;
+  --ink:#e6efed; --ink-2:#9fb3af; --accent:#4cc3ad; --accent-ink:#06201b; --accent-soft:#173a34;
+  --up:#6fd18f; --down:#ff8a80; --up-soft:#163222; --down-soft:#3d1a18; --warn:#f0b44c; --warn-soft:#3a2c10;
+  --sb:#3fae6a; --b:#86cf9c; --h:#d8c57a; --s:#f0a189; --ss:#ff6b5e; --sma:#e0c04a; color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--f-body);padding-top:calc(env(safe-area-inset-top,0px) + 14px);padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}
+/* Franja sólida detrás de la hora y la batería del iPhone, para que el contenido no se vea pasar por debajo */
+.statusbar-shield{position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:40;pointer-events:none}
+@media (min-width:760px){body{padding-bottom:40px;padding-top:env(safe-area-inset-top,0px)}}
+h1,h2,h3{font-family:var(--f-display);line-height:1.2;text-wrap:balance;margin:0}
+h1{font-size:1.4rem} h2{font-size:1.35rem} h3{font-size:1.05rem}
+/* Título de la barra con la fuente del sistema (como en Where's my money?): se ve nítida en iPhone */
+.brand h1{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",system-ui,sans-serif;font-size:20px;font-weight:700;letter-spacing:-.02em;text-wrap:nowrap}
+p{margin:0} a{color:var(--accent)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.num{font-family:var(--f-data);font-variant-numeric:tabular-nums}
+.muted{color:var(--ink-2)} .small{font-size:.86rem}
+.eyebrow{font:600 .72rem/1 var(--f-display);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.up{color:var(--up)} .down{color:var(--down)}
+
+/* En celular el título se queda arriba y se va al bajar (como en Where's my money?); en computadora queda fijo con las pestañas */
+header.top{background:var(--bg);border-bottom:1px solid var(--line)}
+@media (min-width:760px){header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface)}}
+header.top .wrap{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-block:10px}
+.brand{flex:1;min-width:0;display:flex;align-items:center;gap:12px}
+.brand .logo{width:40px;height:40px;border-radius:11px;flex:none;display:block}
+.brand .txt{min-width:0;display:flex;flex-direction:column;gap:2px}
+.status{display:flex;align-items:center;gap:7px;font-size:.8rem;color:var(--ink-2)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--warn);flex:none}
+.dot.live{background:var(--up);box-shadow:0 0 0 3px var(--up-soft)}
+nav.tabs{display:none;gap:4px}
+@media (min-width:760px){nav.tabs{display:flex}}
+nav button{border:0;background:none;cursor:pointer}
+nav.tabs button{padding:8px 14px;border-radius:999px;font-weight:700;color:var(--ink-2)}
+nav.tabs button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink)}
+nav.bottom{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);
+  padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+@media (min-width:760px){nav.bottom{display:none}}
+nav.bottom button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;border-radius:8px;font-size:.74rem;font-weight:700;color:var(--ink-2)}
+nav.bottom svg{width:22px;height:22px}
+nav.bottom button[aria-selected="true"]{color:var(--accent);background:var(--accent-soft)}
+
+section.view{display:flex;flex-direction:column;gap:18px;padding-block:20px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.note{font-size:.82rem;color:var(--ink-2);border-left:3px solid var(--warn);padding-left:10px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--surface);padding:10px 16px;border-radius:10px;font-weight:700;cursor:pointer;text-decoration:none;color:var(--ink);min-height:44px}
+.btn:hover{background:var(--surface-2)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.sm{padding:6px 12px;min-height:36px;font-size:.88rem}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{white-space:nowrap;border:1px solid var(--line);background:var(--surface);padding:7px 13px;border-radius:999px;cursor:pointer;font-size:.88rem;font-weight:700;color:var(--ink-2);min-height:36px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+label.field{display:flex;flex-direction:column;gap:4px;font-size:.88rem;font-weight:700;min-width:0}
+label.field .hint{font-weight:400;color:var(--ink-2)}
+input,select{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:10px;width:100%;max-width:100%;min-width:0;min-height:44px}
+input[type=date]{-webkit-appearance:none;appearance:none;display:block;text-align:left}
+input[type=date]::-webkit-date-and-time-value{text-align:left}
+.form{display:grid;gap:12px;grid-template-columns:1fr}
+@media (min-width:640px){.form{grid-template-columns:1fr 1fr}}
+
+/* Hoy: mosaico */
+.hello{display:flex;flex-direction:column;gap:6px}
+.hello p{max-width:62ch;color:var(--ink-2)}
+.tiles{display:grid;gap:12px;grid-template-columns:1fr}
+@media (min-width:560px){.tiles{grid-template-columns:1fr 1fr}}
+@media (min-width:900px){.tiles{grid-template-columns:1fr 1fr 1fr}}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:grid;grid-template-columns:1fr auto;gap:6px 10px;cursor:pointer;text-align:left;width:100%;min-width:0}
+.tile:hover{border-color:var(--accent)}
+.tile .nm{font:700 1.05rem/1.2 var(--f-display)}
+.tile .sub{font-size:.8rem;color:var(--ink-2);grid-column:1/-1;margin-top:-4px}
+.tile .px{font:600 1.25rem/1.1 var(--f-data);font-variant-numeric:tabular-nums}
+.tile .chg{justify-self:end;align-self:center;font:600 .85rem/1 var(--f-data);padding:5px 8px;border-radius:6px}
+.chg.up{background:var(--up-soft)} .chg.down{background:var(--down-soft)}
+.tile svg.spark{grid-column:1/-1;width:100%;height:44px}
+.tile .ex{grid-column:1/-1;font-size:.82rem;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:.75rem;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--ink)}
+.badge.buy{background:var(--up-soft);color:var(--up)} .badge.sell{background:var(--down-soft);color:var(--down)} .badge.neu{background:var(--warn-soft);color:var(--warn)}
+.section-title{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+
+/* Explorar */
+.pick{overflow-x:auto;padding-bottom:4px}
+.pick .chips{flex-wrap:nowrap}
+.dhead{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.dprice{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.dprice .big{font:600 1.9rem/1 var(--f-data);font-variant-numeric:tabular-nums}
+.chartbox{position:relative;height:300px;width:100%}
+@media (min-width:760px){.chartbox{height:360px}}
+.cols{display:grid;gap:16px;grid-template-columns:1fr}
+@media (min-width:820px){.cols{grid-template-columns:1fr 1fr}}
+.verdict{font-size:1.05rem;line-height:1.5}
+.verdict b{font-family:var(--f-display)}
+.stack{display:flex;height:16px;border-radius:999px;overflow:hidden;background:var(--surface-2)}
+.stack span{height:100%}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:.8rem;color:var(--ink-2)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.target{position:relative;height:42px;margin:4px 6px 0}
+.target .bar{position:absolute;top:18px;left:0;right:0;height:6px;border-radius:3px;background:var(--surface-2)}
+.target .mk{position:absolute;top:8px;width:2px;height:26px;transform:translateX(-1px)}
+.target .lb{position:absolute;top:-6px;transform:translateX(-50%);font:600 .72rem/1 var(--f-data);white-space:nowrap}
+.target .lb.b{top:36px}
+.facts{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:8px}
+.plazos{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.plazos div{background:var(--surface-2);border-radius:10px;padding:10px;text-align:center;display:flex;flex-direction:column;gap:2px}
+.plazos b{font:600 1.1rem/1.1 var(--f-data)}
+@media (max-width:420px){.plazos{grid-template-columns:repeat(2,1fr)}}
+
+/* Mi dinero */
+.total{display:flex;gap:16px;flex-wrap:wrap;align-items:baseline}
+.total .big{font:600 2rem/1 var(--f-data)}
+.hold{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:12px 0;border-top:1px solid var(--line)}
+.hold:first-child{border-top:0}
+.hold .v{font:600 1.05rem/1.2 var(--f-data);text-align:right}
+.hold .g{font:500 .85rem/1.2 var(--f-data);text-align:right}
+
+/* Guías */
+details.guide{background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+details.guide summary{cursor:pointer;padding:14px 16px;font:700 1.02rem/1.3 var(--f-display);display:flex;justify-content:space-between;gap:8px;list-style:none}
+details.guide summary::-webkit-details-marker{display:none}
+details.guide summary::after{content:"+";font-size:1.3rem;line-height:1;color:var(--ink-2)}
+details.guide[open] summary::after{content:"–"}
+details.guide .gbody{padding:0 16px 16px;display:flex;flex-direction:column;gap:10px}
+ol.steps{margin:0;padding:0;list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:10px}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start}
+ol.steps li::before{content:counter(s);width:28px;height:28px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:700 .9rem/28px var(--f-display);text-align:center}
+.log{font:400 .8rem/1.5 var(--f-data);background:var(--surface-2);border-radius:8px;padding:10px;white-space:pre-wrap;min-height:2.4em}
+footer{padding-block:20px;color:var(--ink-2);font-size:.8rem}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="statusbar-shield" aria-hidden="true"></div>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <img class="logo" src="__LOGO__" alt="" width="40" height="40">
+      <div class="txt">
+      <h1>How's my money?</h1>
+      <div class="status" id="status"><span class="dot"></span><span>Cargando…</span></div>
+      </div>
+    </div>
+    <nav class="tabs" aria-label="Secciones">
+      <button data-tab="hoy">Hoy</button><button data-tab="explorar">Explorar</button><button data-tab="dinero">Mi dinero</button><button data-tab="guias">Cómo comprar</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+<!-- HOY -->
+<section class="view" data-view="hoy">
+  <div class="hello">
+    <h2>¿Cómo van hoy?</h2>
+    <p><span id="today"></span>. Toca cualquier tarjeta para ver su gráfica, lo que dicen los expertos y cómo comprarlo.</p>
+  </div>
+  <div class="panel" id="money-mini" hidden></div>
+  <div class="section-title"><h3>Fondos (ETF) y CETES</h3><span class="small muted">Menos riesgo por estar diversificados</span></div>
+  <div class="tiles" id="tiles-etf"></div>
+  <div class="section-title"><h3>Empresas de EE. UU.</h3><span class="small muted">Las de mayor peso en el S&amp;P 500</span></div>
+  <div class="tiles" id="tiles-us"></div>
+  <div class="section-title"><h3>Empresas de México</h3><span class="small muted">Las de mayor peso en el IPC de la Bolsa Mexicana</span></div>
+  <div class="tiles" id="tiles-mx"></div>
+  <div class="section-title"><h3>Japón</h3><span class="small muted">Se compran en EE. UU. y su precio está en dólares</span></div>
+  <div class="tiles" id="tiles-jp"></div>
+  <p class="small muted">Una sola empresa tiene más riesgo que un fondo. Estas aparecen por ser las más grandes de cada bolsa, no porque vayan a subir.</p>
+  <p class="note">Las opiniones de analistas son de terceros, con su fuente y fecha. No son una recomendación de esta página. Los resultados pasados no garantizan rendimientos futuros.</p>
+</section>
+
+<!-- EXPLORAR -->
+<section class="view" data-view="explorar" hidden>
+  <div class="pick"><div class="chips" id="pick"></div></div>
+  <div class="dhead">
+    <div style="display:flex;flex-direction:column;gap:4px;min-width:0">
+      <h2 id="d-name"></h2>
+      <span class="small muted"><span id="d-kind"></span> · <span id="d-desc"></span></span>
+    </div>
+    <div class="dprice"><span class="big" id="d-price"></span><span class="num small" id="d-chg"></span><span class="small muted" id="d-mxn"></span></div>
+  </div>
+
+  <div class="panel" id="d-chartpanel">
+    <div class="row" style="justify-content:space-between">
+      <div class="chips" id="d-range">
+        <button class="chip" data-v="22" aria-pressed="false">1 mes</button>
+        <button class="chip" data-v="126" aria-pressed="false">6 meses</button>
+        <button class="chip" data-v="252" aria-pressed="true">1 año</button>
+        <button class="chip" data-v="9999" aria-pressed="false">5 años</button>
+      </div>
+      <label class="small row" style="gap:6px;cursor:pointer"><input type="checkbox" id="d-sma" checked style="width:18px;min-height:0;accent-color:var(--sma)"> Promedio de 200 días</label>
+    </div>
+    <div class="chartbox"><canvas id="d-chart" aria-label="Gráfica de precio"></canvas></div>
+  </div>
+
+  <div class="cols">
+    <div class="panel">
+      <h3>Lo que dicen los expertos</h3>
+      <div id="d-experts"></div>
+    </div>
+    <div class="panel">
+      <h3>Lo que muestra la gráfica</h3>
+      <ul class="facts small" id="d-facts"></ul>
+      <p class="note">Esto describe lo que pasó. Una gráfica no predice el futuro: dos analistas pueden ver la misma gráfica y concluir lo contrario.</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Si hubieras invertido con tu aportación</h3>
+    <div id="d-sim"></div>
+  </div>
+
+  <div class="panel">
+    <h3>Cómo comprarlo</h3>
+    <div class="row" id="d-how"></div>
+  </div>
+</section>
+
+<!-- MI DINERO -->
+<section class="view" data-view="dinero" hidden>
+  <div class="hello">
+    <h2>Lo que ya invertiste, a precio de hoy</h2>
+    <p>Anota cada compra que hagas en GBM, Plata, Nu o cetesdirecto. La página calcula cuánto vale ahora. Tus datos se quedan solo en este navegador.</p>
+  </div>
+  <div class="panel" id="money"></div>
+  <div class="panel">
+    <h3>Anotar una compra</h3>
+    <div class="form">
+      <label class="field" for="m-item">¿Qué compraste?<select id="m-item"></select></label>
+      <label class="field" for="m-plat">¿Dónde?<select id="m-plat"><option>GBM</option><option>Plata</option><option>Nu</option><option>cetesdirecto</option></select></label>
+      <label class="field" for="m-total">¿Cuánto pagaste en total? (pesos)<span class="hint">Los pesos que salieron de tu cuenta, aunque compraras en dólares.</span><input type="number" id="m-total" inputmode="decimal" min="0" step="0.01" placeholder="300"></label>
+      <label class="field" for="m-qty" id="m-qty-l">¿Cuántos títulos?<span class="hint">Si compraste fracciones, usa decimales (ej. 0.12).</span><input type="number" id="m-qty" inputmode="decimal" min="0" step="0.0001" placeholder="1"></label>
+      <label class="field" for="m-rate" id="m-rate-l" hidden>Tasa anual (%)<span class="hint">La que te ofrecieron al invertir.</span><input type="number" id="m-rate" inputmode="decimal" step="0.01" placeholder="6.25"></label>
+      <label class="field" for="m-date">Fecha<input type="date" id="m-date"></label>
+    </div>
+    <div class="row"><button class="btn primary" id="m-add">Guardar compra</button><span class="small" id="m-msg" aria-live="polite"></span></div>
+  </div>
+</section>
+
+<!-- GUÍAS -->
+<section class="view" data-view="guias" hidden>
+  <div class="hello">
+    <h2>Paso a paso en tus apps</h2>
+    <p>Los nombres de los botones pueden cambiar cuando las apps se actualizan, pero los pasos son los mismos. Nunca compartas tus contraseñas ni códigos con nadie, incluida esta página.</p>
+  </div>
+  <div id="guides" style="display:flex;flex-direction:column;gap:10px"></div>
+
+  <div class="panel" id="ajustes">
+    <h3>Ajustes: precios en vivo</h3>
+    <p class="small">Sin hacer nada, todos los precios (incluidas las empresas mexicanas, NAFTRAC y el dólar) se actualizan cada 15 minutos mientras la bolsa está abierta, con unos 15 minutos de retraso. Con una clave gratuita de <a href="https://finnhub.io/register" target="_blank" rel="noopener">Finnhub</a>, VT, VOO, EWJ y las empresas que cotizan en EE. UU. (incluidas Toyota y Sony) se actualizan además en vivo cada 5 minutos, igual que las calificaciones de sus analistas. <b>Basta con pegar la clave una vez en cada dispositivo:</b> se queda guardada aunque cierres la app. Solo lee datos públicos del mercado.</p>
+    <label class="field" for="k-fh">Clave de Finnhub<input type="password" id="k-fh" autocomplete="off" placeholder="Pega tu clave aquí"></label>
+    <div class="row"><button class="btn primary" id="k-go">Activar precios en vivo</button><button class="btn sm" id="k-del">Borrar clave</button></div>
+    <div class="log" id="log" aria-live="polite"></div>
+    <p class="small muted" id="gen"></p>
+  </div>
+</section>
+
+<footer>Herramienta personal de consulta. No es asesoría de inversión. Las opiniones mostradas son de los analistas citados. Toda inversión puede perder valor.</footer>
+</main>
+
+<nav class="bottom" aria-label="Secciones">
+  <button data-tab="hoy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h18M5 16l4-5 4 3 6-8"/></svg>Hoy</button>
+  <button data-tab="explorar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Explorar</button>
+  <button data-tab="dinero"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M16 15h2"/></svg>Mi dinero</button>
+  <button data-tab="guias"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h11a3 3 0 0 1 3 3v12H7a3 3 0 0 1-3-3z"/><path d="M8 9h6M8 13h6"/></svg>Cómo comprar</button>
+</nav>
+
+<script id="datos" type="application/json">__DATOS__</script>
+<script>
+"use strict";
+const $ = (s,r=document)=>r.querySelector(s), $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const store = {
+  get(k,d){ try{ const v = localStorage.getItem("mpi2:"+k); return v===null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem("mpi2:"+k, JSON.stringify(v)); }catch(e){} },
+  del(k){ try{ localStorage.removeItem("mpi2:"+k); }catch(e){} }
+};
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const money = (v,cur="MXN",d=2) => (v<0?"−":"") + (cur==="USD"?"US$":"$") + Math.abs(v).toLocaleString("es-MX",{minimumFractionDigits:d,maximumFractionDigits:d});
+const pct = (v,d=1) => (v>0?"+":v<0?"−":"") + Math.abs(v*100).toFixed(d) + "%";
+const fdate = iso => new Date(iso+"T12:00:00").toLocaleDateString("es-MX",{day:"numeric",month:"short",year:"numeric"});
+const todayLocal = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; };
+const MESES = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+const DATA = JSON.parse($("#datos").textContent);
+const MODO = "__MODO__";   // "local": archivo en la Mac con precios en vivo; "app": versión publicada (solo cierres diarios)
+const EXP = DATA.expertos;
+const live = {};          // precios en vivo de Finnhub {SYM:{c,pc,t}}
+const liveRec = {};       // calificaciones en vivo {SYM:{...,period}}
+const yahoo = {};         // precios de precios.json (GitHub Actions, cada 15 min, ~15 min de retraso) {SYM:{c,t}}
+let yahooHora = null;
+const APORTE = 300;
+
+const ITEMS = DATA.items;   // viene de motor/simbolos.json
+const BY = Object.fromEntries(ITEMS.map(i=>[i.sym,i]));
+
+/* ---------- Series y cálculos ---------- */
+function series(sym){
+  const s = DATA.s[sym]; const d = s.d.slice(), c = s.c.slice();
+  // Usa el precio más reciente entre Finnhub (en vivo) y precios.json (cada 15 min).
+  const F = live[sym], Y = yahoo[sym];
+  const L = (F && Y) ? (F.t >= Y.t ? F : Y) : (F || Y);
+  if (L){ const day = new Date(L.t*1000).toISOString().slice(0,10);
+    if (day > d[d.length-1]){ d.push(day); c.push(L.c); } else if (day === d[d.length-1]) c[c.length-1] = L.c; }
+  return {d, c, cur:s.cur};
+}
+// La bolsa de Nueva York (y la mexicana, que abre a la misma hora) opera de 9:30 a 16:00, hora de Nueva York, de lunes a viernes.
+function bolsaAbierta(){
+  const p = Object.fromEntries(new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",weekday:"short",hour:"numeric",minute:"numeric",hour12:false}).formatToParts(new Date()).map(x=>[x.type,x.value]));
+  const min = (+p.hour % 24)*60 + (+p.minute);
+  return !["Sat","Sun"].includes(p.weekday) && min >= 570 && min < 960;
+}
+const fxNow = () => { const f = DATA.s["MXN=X"].c; return yahoo["MXN=X"] ? yahoo["MXN=X"].c : f[f.length-1]; };
+function fxAt(date){ const s = DATA.s["MXN=X"]; let lo=0, hi=s.d.length-1;
+  if (date <= s.d[0]) return s.c[0];
+  while (lo<hi){ const m=(lo+hi+1)>>1; if (s.d[m] <= date) lo=m; else hi=m-1; } return s.c[lo]; }
+function stats(sym){
+  const {d,c,cur} = series(sym), n = c.length, last = c[n-1];
+  const back = k => c[Math.max(0,n-1-k)];
+  const sma = k => { if (n<k) return null; let t=0; for (let i=n-k;i<n;i++) t+=c[i]; return t/k; };
+  const y = c.slice(-252); const hi52 = Math.max(...y), lo52 = Math.min(...y);
+  let peak=0, dd=0; for (const x of c){ peak=Math.max(peak,x); dd=Math.min(dd,x/peak-1); }
+  return {d,c,cur,last, prev:c[n-2], d1:last/c[n-2]-1, m1:last/back(21)-1, y1:last/back(252)-1, y5:last/c[0]-1,
+    sma200:sma(200), sma50:sma(50), hi52, lo52, fromHi:last/hi52-1, dd, start:d[0]};
+}
+const priceMXN = sym => { const s = stats(sym); return s.cur==="USD" ? s.last*fxNow() : s.last; };
+
+/* ---------- Expertos ---------- */
+function rec(sym){
+  const e = EXP[sym]; if (!e && !liveRec[sym]) return null;
+  if (liveRec[sym]){ const r = liveRec[sym];
+    const conteo = {compraFuerte:r.strongBuy, compra:r.buy, mantener:r.hold, venta:r.sell, ventaFuerte:r.strongSell};
+    const tot = r.strongBuy+r.buy+r.hold+r.sell+r.strongSell;
+    return Object.assign({}, e||{}, {conteo, analistas:tot, consenso:consensus(conteo), fuente:"Finnhub (en vivo)", url:"https://finnhub.io", fecha:r.period, vivo:true, aviso:null});
+  }
+  return e;
+}
+function consensus(c){
+  const t = c.compraFuerte+c.compra+c.mantener+c.venta+c.ventaFuerte; if (!t) return "Sin datos";
+  const score = (c.compraFuerte*5+c.compra*4+c.mantener*3+c.venta*2+c.ventaFuerte)/t;
+  return score>=4.5?"Compra fuerte":score>=3.5?"Compra":score>=2.5?"Neutral":score>=1.5?"Venta":"Venta fuerte";
+}
+const badgeCls = c => /Compra/.test(c) ? "buy" : /Venta/.test(c) ? "sell" : "neu";
+
+/* ---------- Navegación ---------- */
+const TABS = ["hoy","explorar","dinero","guias"];
+let current = store.get("sel","VT");
+function show(tab){
+  if (!TABS.includes(tab)) tab="hoy";
+  $$("section.view").forEach(s=>s.hidden = s.dataset.view!==tab);
+  $$("nav [data-tab]").forEach(b=>b.setAttribute("aria-selected", b.dataset.tab===tab));
+  if (tab==="explorar") renderDetail();
+  if (tab==="dinero") renderMoney();
+  window.scrollTo({top:0});
+}
+function go(tab){ if (location.hash.slice(1)===tab) show(tab); else location.hash = tab; }
+$$("nav [data-tab]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.tab)));
+window.addEventListener("hashchange",()=>show(location.hash.slice(1)));
+
+/* ---------- Hoy ---------- */
+function spark(c, up){
+  const y = c.slice(-66), mn = Math.min(...y), mx = Math.max(...y), w=300, h=44;
+  const pts = y.map((v,i)=>`${(i/(y.length-1)*w).toFixed(1)},${(h-3-(v-mn)/(mx-mn||1)*(h-6)).toFixed(1)}`).join(" ");
+  const col = up ? "var(--up)" : "var(--down)";
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>`;
+}
+function tile(it){
+  if (it.kind==="cetes"){
+    const p = EXP.CETES.plazos;
+    return `<button class="tile" data-open="CETES"><span class="nm">CETES</span><span class="chg up">${p["28"]}%</span>
+      <span class="sub">${it.sub}</span><span class="px">desde $100</span><span></span>
+      <span class="ex small muted">28 días ${p["28"]}% · 91 días ${p["91"]}% · 1 año ${p["364"]}% (tasa anual)</span>
+      <span class="ex"><span class="badge buy">Bajo riesgo</span><span class="small muted">Expertos esperan tasas estables</span></span></button>`;
+  }
+  const s = stats(it.sym), r = rec(it.sym), up = s.d1>=0;
+  const ex = r ? `<span class="badge ${badgeCls(r.consenso)}">Analistas: ${r.consenso}</span><span class="small muted">${r.analistas} analistas</span>`
+         : it.kind==="stk" ? `<span class="badge">Sin consenso reciente</span>`
+               : `<span class="badge">Fondo de índice</span><span class="small muted">No se califica con compra/venta</span>`;
+  return `<button class="tile" data-open="${it.sym}"><span class="nm">${it.name}</span><span class="chg ${up?"up":"down"}">${pct(s.d1,2)}</span>
+    <span class="sub">${it.sub}</span><span class="px">${money(s.last,s.cur)}</span><span class="small muted" style="align-self:center">${s.cur==="USD"?"≈ "+money(priceMXN(it.sym),"MXN",0):"1 año "+pct(s.y1,0)}</span>
+    ${spark(s.c, s.c[s.c.length-1]>=s.c[Math.max(0,s.c.length-66)])}
+    <span class="ex">${ex}</span></button>`;
+}
+function renderHoy(){
+  $("#today").textContent = "Datos al " + fdate(DATA.asof);
+  $("#tiles-etf").innerHTML = ITEMS.filter(i=>i.group==="etf").map(tile).join("");
+  $("#tiles-us").innerHTML = ITEMS.filter(i=>i.group==="us").map(tile).join("");
+  $("#tiles-mx").innerHTML = ITEMS.filter(i=>i.group==="mx").map(tile).join("");
+  $("#tiles-jp").innerHTML = ITEMS.filter(i=>i.group==="jp").map(tile).join("");
+  $$("[data-open]").forEach(b=>b.addEventListener("click",()=>{ current=b.dataset.open; store.set("sel",current); go("explorar"); }));
+  const h = holdings();
+  const mm = $("#money-mini");
+  if (h.length){ const t = totals(h); mm.hidden=false;
+    mm.innerHTML = `<div class="row" style="justify-content:space-between"><div><span class="eyebrow">Mi dinero hoy</span><div class="num" style="font-size:1.5rem;font-weight:600">${money(t.value)}</div></div>
+      <div class="num ${t.gain>=0?"up":"down"}">${t.gain>=0?"+":""}${money(t.gain)} (${pct(t.gain/t.cost)})</div><button class="btn sm" id="mm-go">Ver detalle</button></div>`;
+    $("#mm-go").addEventListener("click",()=>go("dinero"));
+  } else mm.hidden=true;
+}
+
+/* ---------- Explorar ---------- */
+let range = 252, chart;
+$("#pick").innerHTML = ITEMS.map(i=>`<button class="chip" data-v="${i.sym}">${i.name}</button>`).join("");
+$$("#pick .chip").forEach(c=>c.addEventListener("click",()=>{ current=c.dataset.v; store.set("sel",current); renderDetail(); }));
+$$("#d-range .chip").forEach(c=>c.addEventListener("click",()=>{ $$("#d-range .chip").forEach(x=>x.setAttribute("aria-pressed",x===c)); range=+c.dataset.v; drawChart(); }));
+$("#d-sma").addEventListener("change", drawChart);
+
+function renderDetail(){
+  const it = BY[current] || BY.VT;
+  $$("#pick .chip").forEach(c=>c.setAttribute("aria-pressed", c.dataset.v===it.sym));
+  $("#d-kind").textContent = {cetes:"Deuda del gobierno, bajo riesgo", etf:"Fondo cotizado (ETF)", stk:"Acción de una empresa"}[it.kind];
+  $("#d-name").textContent = it.kind==="cetes" ? "CETES" : `${it.name} · ${it.tk||it.sym}`;
+  $("#d-desc").textContent = it.sub + " · Disponible en: " + it.plat.join(", ");
+  $("#d-chartpanel").hidden = it.kind==="cetes";
+  if (it.kind==="cetes") return renderCetes(it);
+  const s = stats(it.sym);
+  $("#d-price").textContent = money(s.last, s.cur);
+  const cuando = (live[it.sym] && bolsaAbierta()) ? "hoy, en vivo" : (yahoo[it.sym] && bolsaAbierta()) ? "hoy (con ~15 min de retraso)" : "al cierre del " + new Date(s.d[s.d.length-1]+"T12:00:00").toLocaleDateString("es-MX",{day:"numeric",month:"short"});
+  $("#d-chg").innerHTML = `<span class="${s.d1>=0?"up":"down"}">${s.d1>=0?"▲":"▼"} ${pct(s.d1,2)} ${cuando}</span>`;
+  $("#d-mxn").textContent = s.cur==="USD" ? `≈ ${money(priceMXN(it.sym))} por título (dólar a $${fxNow().toFixed(2)})` : "Precio por título en pesos";
+  drawChart();
+
+  // Expertos
+  const r = rec(it.sym);
+  if (r){
+    const c = r.conteo, tot = c.compraFuerte+c.compra+c.mantener+c.venta+c.ventaFuerte, w = v => (v/tot*100).toFixed(1)+"%";
+    const buy = c.compraFuerte+c.compra, sell = c.venta+c.ventaFuerte;
+    let tgt = "";
+    if (r.objetivo){ const o = r.objetivo, lo = Math.min(o.bajo, s.last), hi = Math.max(o.alto, s.last), pos = v => ((v-lo)/(hi-lo)*100).toFixed(1)+"%";
+      const diff = o.promedio/s.last-1;
+      tgt = `<p class="small"><b>Precio objetivo a 12 meses</b> (lo que estiman que valdrá): promedio ${money(o.promedio,s.cur)}, ${diff>=0?"es decir "+pct(diff,0)+" arriba":"es decir "+pct(diff,0)+" abajo"} del precio actual.${diff<0?" <b>El precio actual ya está por encima del objetivo promedio.</b>":""}</p>
+      <div class="target" aria-hidden="true"><div class="bar"></div>
+        <span class="mk" style="left:${pos(o.bajo)};background:var(--ink-2)"></span>
+        <span class="mk" style="left:${pos(o.alto)};background:var(--ink-2)"></span>
+        <span class="mk" style="left:${pos(o.promedio)};background:var(--up);width:3px"></span>
+        <span class="mk" style="left:${pos(s.last)};background:var(--ink);width:3px;height:34px;top:4px"></span>
+      </div>
+      <div class="legend"><span><i style="background:var(--ink)"></i>Hoy ${money(s.last,s.cur,0)}</span><span><i style="background:var(--up)"></i>Objetivo promedio ${money(o.promedio,s.cur,0)}</span><span><i style="background:var(--ink-2)"></i>Más bajo ${money(o.bajo,s.cur,0)} · más alto ${money(o.alto,s.cur,0)}</span></div>`; }
+    $("#d-experts").innerHTML = `
+      <p class="verdict">Según <b>${tot} analistas</b>, el consenso es <span class="badge ${badgeCls(r.consenso)}" style="font-size:.9rem">${r.consenso}</span>: <b>${buy}</b> recomiendan comprar, <b>${c.mantener}</b> mantener y <b>${sell}</b> vender.</p>
+      <div class="stack" role="img" aria-label="${buy} compra, ${c.mantener} mantener, ${sell} venta">
+        <span style="width:${w(c.compraFuerte)};background:var(--sb)"></span><span style="width:${w(c.compra)};background:var(--b)"></span><span style="width:${w(c.mantener)};background:var(--h)"></span><span style="width:${w(c.venta)};background:var(--s)"></span><span style="width:${w(c.ventaFuerte)};background:var(--ss)"></span></div>
+      <div class="legend"><span><i style="background:var(--sb)"></i>Compra fuerte ${c.compraFuerte}</span><span><i style="background:var(--b)"></i>Compra ${c.compra}</span><span><i style="background:var(--h)"></i>Mantener ${c.mantener}</span><span><i style="background:var(--s)"></i>Venta ${c.venta}</span><span><i style="background:var(--ss)"></i>Venta fuerte ${c.ventaFuerte}</span></div>
+      ${tgt}
+      <p class="small muted">Fuente: <a href="${r.url}" target="_blank" rel="noopener">${r.fuente}</a> · ${r.vivo ? "periodo "+r.fecha : "dato del "+fdate(r.fecha)}${r.aviso?". "+r.aviso:""}</p>
+      <p class="note">Los analistas se equivocan seguido, y sus objetivos cambian cuando cambia el precio. Muchos trabajan para bancos con intereses propios.</p>`;
+  } else if (it.kind==="stk") {
+    $("#d-experts").innerHTML = `<p>No encontré un consenso de analistas publicado y reciente para ${it.name}. Los bancos que la cubren publican sus reportes, pero no en una fuente pública que reúna a todos.</p><p class="small muted">Puedes revisar la sección de análisis de la app de GBM, donde a veces aparecen sus recomendaciones.</p>`;
+  } else {
+    const txt = it.sym==="EWJ"
+      ? `<p>Los analistas no califican fondos de índice con "compra" o "venta". EWJ copia a la bolsa de Japón: depende de la economía japonesa y también del yen, porque si el yen se debilita frente al dólar, el fondo vale menos en dólares.</p><p class="small muted">Si ya compras VT, ahí ya tienes empresas japonesas (alrededor de 5% del fondo).</p>`
+      : it.sym==="NAFTRAC.MX"
+      ? `<p>Los analistas no califican fondos de índice con "compra" o "venta", porque un fondo así solo copia a un grupo de empresas. NAFTRAC copia a la Bolsa Mexicana: depende de pocas empresas grandes y de la economía de México.</p><p class="small muted">No encontré un consenso publicado sobre el índice de la Bolsa Mexicana para estas fechas.</p>`
+      : `<p>Los analistas no califican fondos de índice como ${it.name} con "compra" o "venta", porque un fondo así solo copia a un grupo grande de empresas.</p><p>Lo que sí repiten las guías de inversión para principiantes (CONDUSEF, gestoras como Vanguard): para quien empieza, los fondos indexados amplios y de bajo costo suelen ser la base, porque reparten el riesgo entre muchas empresas.</p>`;
+    $("#d-experts").innerHTML = txt + `<p class="note">Que una guía mencione un tipo de fondo no significa que vaya a subir. ${it.name} también cae cuando cae la bolsa.</p>`;
+  }
+
+  // Hechos de la gráfica
+  const f = [];
+  f.push(`Hoy ${s.d1>=0?"subió":"bajó"} <b>${pct(Math.abs(s.d1),2).replace("+","")}</b>; en el último mes ${pct(s.m1)} y en el último año <b>${pct(s.y1)}</b> (en ${s.cur==="USD"?"dólares":"pesos"}).`);
+  if (s.sma200) { const v = s.last/s.sma200-1;
+    f.push(`Está <b>${v>=0?"por encima":"por debajo"}</b> de su promedio de 200 días (${pct(v)}). Los analistas técnicos suelen leer ${v>=0?"esto como tendencia al alza":"esto como tendencia a la baja"}.`); }
+  f.push(`Está a <b>${pct(s.fromHi)}</b> de su precio más alto del último año (${money(s.hi52,s.cur)}).`);
+  f.push(`En los últimos 5 años llegó a caer <b>${pct(s.dd)}</b> desde un máximo antes de recuperarse.`);
+  if (it.kind==="stk") f.push(`Es una sola empresa: si a ella le va mal, no hay otras que compensen la pérdida.`);
+  $("#d-facts").innerHTML = f.map(x=>`<li>${x}</li>`).join("");
+
+  // Simulación con aportación
+  const n = s.c.length, k = Math.min(12, Math.floor((n-1)/21));
+  let units=0, paid=0;
+  for (let m=k; m>=1; m--){ const i = n-1-m*21; const px = s.cur==="USD" ? s.c[i]*fxAt(s.d[i]) : s.c[i]; units += APORTE/px; paid += APORTE; }
+  const val = units*priceMXN(it.sym), g = val/paid-1;
+  const p = priceMXN(it.sym), mon = Math.ceil(p/APORTE);
+  $("#d-sim").innerHTML = `<p>Si hubieras metido <b>${money(APORTE,"MXN",0)}</b> cada mes durante el último año (${money(paid,"MXN",0)} en total), hoy tendrías <b class="num ${g>=0?"up":"down"}">${money(val,"MXN",0)}</b> (${pct(g)}).</p>
+    <p class="small">${p<=APORTE ? `Un título cuesta ~${money(p,"MXN",0)}: sí te alcanza con una aportación.` : `Un título cuesta ~${money(p,"MXN",0)}: en GBM (SIC) necesitarías juntar unos ${mon} meses, salvo que la app te deje comprar fracciones. En Plata Inversiones puedes comprar fracciones desde USD 1.`}</p>
+    <p class="note">Es lo que pasó el último año, no lo que va a pasar. Incluye el efecto del tipo de cambio; no incluye comisiones ni impuestos.</p>`;
+  renderHow(it);
+}
+function drawChart(){
+  const it = BY[current]; if (!it || it.kind==="cetes" || !window.Chart) return;
+  const s = stats(it.sym), n = s.c.length, st = Math.max(0, n-range);
+  const smaArr = s.c.map((_,i)=> i<199 ? null : s.c.slice(i-199,i+1).reduce((a,b)=>a+b,0)/200);
+  Chart.defaults.font.family = css("--f-body"); Chart.defaults.color = css("--ink-2"); Chart.defaults.borderColor = css("--line");
+  const up = s.c[n-1] >= s.c[st];
+  const ds = [{label:"Precio", data:s.c.slice(st), borderColor:css(up?"--up":"--down"), backgroundColor:css(up?"--up-soft":"--down-soft"), fill:true, borderWidth:2, pointRadius:0, tension:.1}];
+  if ($("#d-sma").checked) ds.push({label:"Promedio 200 días", data:smaArr.slice(st), borderColor:css("--sma"), borderDash:[6,4], borderWidth:2.5, pointRadius:0, fill:false});
+  if (chart) chart.destroy();
+  chart = new Chart($("#d-chart"), {type:"line", data:{labels:s.d.slice(st).map(fdate), datasets:ds},
+    options:{responsive:true, maintainAspectRatio:false, interaction:{mode:"index",intersect:false},
+      plugins:{legend:{display:$("#d-sma").checked, position:"bottom", labels:{boxWidth:12}}, tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${money(c.parsed.y,s.cur)}`}}},
+      scales:{x:{ticks:{maxTicksLimit:innerWidth<500?4:6, maxRotation:0, autoSkip:true, callback:function(v){ const d=s.d[st+v]; if(!d) return ""; const [y,m,dd]=d.split("-"); return range<=126 ? (+dd)+" "+MESES[+m-1] : MESES[+m-1]+" "+y.slice(2); }}}, y:{ticks:{callback:v=>(s.cur==="USD"?"US$":"$")+v.toLocaleString("es-MX")}}}}});
+}
+function renderCetes(it){
+  const e = EXP.CETES, p = e.plazos;
+  $("#d-price").textContent = p["28"]+"%"; $("#d-chg").textContent = "tasa anual a 28 días"; $("#d-mxn").textContent = "Desde $100, sin comisiones";
+  $("#d-experts").innerHTML = `
+    <p class="verdict">Los especialistas encuestados por Banxico esperan que la tasa de Banxico cierre 2026 en <b>${e.tasaFin2026}%</b> y 2027 en <b>${e.tasaFin2027}%</b>, casi igual que hoy. Es decir, <b>no esperan que las tasas de CETES cambien mucho</b>.</p>
+    <p class="small">También esperan una inflación de ${e.inflacionFin2026}% al cierre de 2026. Si CETES paga más que la inflación, tu dinero gana poder de compra.</p>
+    <p class="small muted">Fuente: <a href="${e.url}" target="_blank" rel="noopener">${e.fuente}</a> · ${fdate(e.fecha)}</p>`;
+  $("#d-facts").innerHTML = [
+    `Tasas de la última subasta (${fdate(e.plazosFecha)}): <div class="plazos" style="margin-top:8px">${Object.entries(p).map(([k,v])=>`<div><span class="small muted">${k==="364"?"1 año":k+" días"}</span><b>${v}%</b></div>`).join("")}</div>`,
+    `A mayor plazo, mayor tasa, pero tu dinero queda fijo más tiempo. A 28 días puedes cambiar de opinión cada mes.`,
+    `Su precio no sube ni baja día a día como el de una acción. El riesgo principal es que la tasa baje cuando reinviertas.`,
+    `Fuente de tasas: <a href="${e.plazosUrl}" target="_blank" rel="noopener">${e.plazosFuente}</a>.`
+  ].map(x=>`<li>${x}</li>`).join("");
+  const r = p["28"]/100, net = r-0.009;
+  $("#d-sim").innerHTML = `<p>Con <b>${money(APORTE,"MXN",0)}</b> al mes durante un año a ${p["28"]}%, terminarías con unos <b class="num up">${money(APORTE*12*(1+net*6.5/12),"MXN",0)}</b> de ${money(APORTE*12,"MXN",0)} aportados.</p>
+    <p class="note">Estimado. Ya descuenta la retención de ISR de 0.9% anual (2026), pero no la inflación. La tasa puede cambiar en cada subasta.</p>`;
+  renderHow(it);
+}
+const GUIDE_FOR = {cetesdirecto:"g-cetes", GBM:"g-gbm", Plata:"g-plata", Nu:"g-nu"};
+function renderHow(it){
+  $("#d-how").innerHTML = it.plat.map(p=>`<button class="btn ${p===it.plat[0]?"primary":""}" data-guide="${GUIDE_FOR[p]}">Cómo comprarlo en ${p}</button>`).join("")
+    + `<button class="btn" data-add="${it.sym}">Anotar en Mi dinero</button>`;
+  $$("[data-guide]").forEach(b=>b.addEventListener("click",()=>{ go("guias"); setTimeout(()=>{ const g=$("#"+b.dataset.guide); g.open=true; g.scrollIntoView({behavior:"smooth"}); },50); }));
+  $$("[data-add]").forEach(b=>b.addEventListener("click",()=>{ go("dinero"); setTimeout(()=>{ $("#m-item").value=b.dataset.add; itemChanged(); $("#m-total").focus(); },50); }));
+}
+
+/* ---------- Mi dinero ---------- */
+const MONEY_OPTS = [...ITEMS.map(i=>({v:i.sym, t:i.kind==="cetes"?"CETES":i.name})), {v:"AHORRO", t:"Cajita Nu / Ahorro Plata / Smart Cash"}];
+$("#m-item").innerHTML = MONEY_OPTS.map(o=>`<option value="${o.v}">${o.t}</option>`).join("");
+$("#m-date").value = todayLocal();
+function itemChanged(){
+  const v = $("#m-item").value, fixed = v==="CETES" || v==="AHORRO";
+  $("#m-qty-l").hidden = fixed; $("#m-rate-l").hidden = !fixed;
+  if (v==="CETES"){ $("#m-plat").value="cetesdirecto"; $("#m-rate").value = EXP.CETES.plazos["28"]; }
+  else if (v==="AHORRO"){ $("#m-plat").value="Nu"; }
+  else $("#m-plat").value = BY[v].plat[0];
+}
+$("#m-item").addEventListener("change", itemChanged); itemChanged();
+const holdings = () => store.get("holdings", []);
+function valueOf(h){
+  if (h.sym==="CETES" || h.sym==="AHORRO"){ const days = Math.max(0,(Date.now()-new Date(h.date+"T12:00:00"))/864e5); return h.total*(1+(h.rate/100-0.009)*days/365); }
+  return h.qty * priceMXN(h.sym);
+}
+function totals(hs){ let cost=0, value=0; hs.forEach(h=>{ cost+=h.total; value+=valueOf(h); }); return {cost, value, gain:value-cost}; }
+$("#m-add").addEventListener("click",()=>{
+  const sym = $("#m-item").value, total = parseFloat($("#m-total").value), fixed = sym==="CETES"||sym==="AHORRO";
+  const qty = parseFloat($("#m-qty").value), rate = parseFloat($("#m-rate").value);
+  if (!(total>0)) return msg("Escribe cuánto pagaste en total.");
+  if (!fixed && !(qty>0)) return msg("Escribe cuántos títulos compraste.");
+  if (fixed && isNaN(rate)) return msg("Escribe la tasa anual que te ofrecieron.");
+  const hs = holdings(); hs.push({id:Date.now(), sym, plat:$("#m-plat").value, total, qty:fixed?null:qty, rate:fixed?rate:null, date:$("#m-date").value || todayLocal()});
+  store.set("holdings", hs); $("#m-total").value=""; $("#m-qty").value=""; msg("Guardado."); renderMoney(); renderHoy();
+});
+function msg(t){ $("#m-msg").textContent = t; }
+function renderMoney(){
+  const hs = holdings(), el = $("#money");
+  if (!hs.length){ el.innerHTML = `<h3>Todavía no anotas compras</h3><p class="small muted">Cuando compres algo en tu app, anótalo abajo con lo que pagaste. Por ejemplo: "NAFTRAC, GBM, $200, 3 títulos".</p>`; return; }
+  const t = totals(hs);
+  el.innerHTML = `<div class="total"><div><span class="eyebrow">Vale hoy</span><div class="big">${money(t.value)}</div></div>
+    <div><span class="eyebrow">Pagaste</span><div class="num">${money(t.cost)}</div></div>
+    <div><span class="eyebrow">Ganancia o pérdida</span><div class="num ${t.gain>=0?"up":"down"}">${t.gain>=0?"+":""}${money(t.gain)} (${pct(t.gain/t.cost)})</div></div></div>
+    <div>${hs.map(h=>{ const v=valueOf(h), g=v-h.total, nm = h.sym==="AHORRO"?"Ahorro / cajita":(BY[h.sym].kind==="cetes"?"CETES":BY[h.sym].name);
+      return `<div class="hold"><div><b>${nm}</b> <span class="small muted">· ${h.plat} · ${fdate(h.date)}</span><div class="small muted">${h.qty?h.qty+" títulos":h.rate+"% anual"} · pagaste ${money(h.total)}</div></div>
+      <div><div class="v">${money(v)}</div><div class="g ${g>=0?"up":"down"}">${g>=0?"+":""}${money(g)}</div><button class="btn sm" data-del="${h.id}" style="margin-top:6px">Quitar</button></div></div>`; }).join("")}</div>
+    <p class="note">Precios ${Object.keys(live).length?"en vivo para empresas y ETFs de EE. UU.; ":""}NAFTRAC, empresas mexicanas y el dólar con el cierre más reciente. CETES y cajitas se estiman con la tasa que anotaste, menos la retención de ISR. Lo que veas en tu app es el dato oficial.</p>`;
+  $$("[data-del]").forEach(b=>b.addEventListener("click",()=>{ store.set("holdings", holdings().filter(h=>String(h.id)!==b.dataset.del)); renderMoney(); renderHoy(); }));
+}
+
+/* ---------- Guías ---------- */
+const MARKET = "La bolsa abre de lunes a viernes, de 7:30 a 14:00 (hora del centro de México) mientras EE. UU. tiene horario de verano, y de 8:30 a 15:00 el resto del año.";
+const GUIDES = [
+  {id:"g-cetes", t:"Comprar CETES en cetesdirecto", s:[
+    "Entra a cetesdirecto.com o descarga su app. Si es tu primera vez, abre una cuenta gratis con tu INE, CURP y la CLABE de una cuenta bancaria a tu nombre.",
+    "Deposita: desde la app de tu banco (o desde Nu o Plata) haz una transferencia SPEI a la CLABE que te da cetesdirecto. La encuentras en la sección para depositar.",
+    "Ve a invertir o comprar y elige CETES. Escoge el plazo: 28 días si quieres poder cambiar de opinión cada mes, o más largo para una tasa un poco mayor.",
+    "Escribe el monto (desde $100) y activa la reinversión automática si quieres que al vencer se vuelva a invertir solo.",
+    "Revisa y confirma. El dinero que quede sin invertir se guarda automáticamente en BONDDIA, que también genera intereses."],
+    tip:"Las compras se asignan en la subasta semanal de los martes. Si compras otro día, tu dinero espera unos días en BONDDIA."},
+  {id:"g-gbm", t:"Comprar un ETF o una acción en GBM", s:[
+    "Abre la app de GBM y entra a tu cuenta.",
+    "Si no tienes saldo, deposita: copia la CLABE de tu cuenta GBM y transfiere por SPEI desde Nu, Plata o tu banco. Suele llegar en minutos.",
+    "Usa el buscador y escribe la clave del instrumento, por ejemplo NAFTRAC, VT, AAPL, NVDA, WALMEX, GMEXICO o FEMSA. La clave de cada una aparece en su ficha de Explorar.",
+    "Toca Comprar. Elige cuántos títulos quieres. La app te muestra el costo total con la comisión (0.25% + IVA).",
+    "Tipo de orden: \"a mercado\" compra al precio de ese momento; \"limitada\" te deja poner el precio máximo que pagarías (si no llega a ese precio, no se compra). Para empezar, la orden limitada te protege de sorpresas.",
+    "Confirma. Tu compra aparece en tu portafolio cuando se ejecuta. Anótala en Mi dinero de esta página."],
+    tip:MARKET + " Las acciones y ETFs de EE. UU. se compran por títulos completos en el SIC; revisa en la app si te ofrece fracciones."},
+  {id:"g-plata", t:"Comprar acciones o ETFs en Plata Inversiones", s:[
+    "Abre la app de Plata y ve a la sección de Inversiones.",
+    "La primera vez te pedirá activar la cuenta de inversión: llena el formulario, incluido el W-8BEN (un formato fiscal de EE. UU. para extranjeros). Tu cuenta la custodia Alpaca Securities, un bróker de EE. UU.",
+    "Pasa dinero a tu cuenta de inversión. Se convierte de pesos a dólares; revisa el tipo de cambio que te muestra antes de confirmar.",
+    "Busca la clave de la empresa o ETF de EE. UU. (por ejemplo VT, AAPL o NVDA) y elige el monto en dólares. Puedes comprar fracciones desde USD 1. Las empresas mexicanas no están aquí; esas se compran en GBM.",
+    "Revisa la comisión y confirma. Anota la compra en Mi dinero con lo que pagaste en pesos."],
+    tip:MARKET + " Las ganancias en un bróker extranjero normalmente las declaras tú ante el SAT; consulta a un contador."},
+  {id:"g-nu", t:"Guardar en una Cajita de Nu", s:[
+    "Abre la app de Nu y entra a tu cuenta.",
+    "Busca la sección de Cajitas y crea una nueva. Ponle un nombre, por ejemplo \"Inversión\".",
+    "Mueve dinero a la cajita. Cajita 24/7 te deja sacarlo cuando quieras; Cajita Turbo paga más, pero pide que uses tus tarjetas Nu cada mes.",
+    "Listo: genera intereses cada día. Anótala en Mi dinero como \"Cajita Nu / Ahorro Plata\" con la tasa que te muestre la app."],
+    tip:"Es buen lugar para juntar tu aportación de 2 o 3 meses antes de comprar un ETF en GBM."},
+  {id:"g-plataahorro", t:"Ahorrar en Plata (Ahorro Flexible)", s:[
+    "Abre la app de Plata y ve a la sección de Ahorro o Cuenta.",
+    "Elige Ahorro Flexible (sacas cuando quieras) o Ahorro Fijo (más tasa, pero el dinero queda fijo de 30 a 360 días).",
+    "Deposita el monto y confirma. Revisa la tasa vigente en la app: cambió varias veces en 2026 y la de 15% es una promoción temporal."],
+    tip:"Está protegido por el IPAB hasta 400,000 UDIs (~$3.5 millones)."}
+];
+$("#guides").innerHTML = GUIDES.map(g=>`<details class="guide" id="${g.id}"><summary>${g.t}</summary><div class="gbody">
+  <ol class="steps">${g.s.map(x=>`<li><span>${x}</span></li>`).join("")}</ol><p class="note">${g.tip}</p></div></details>`).join("");
+
+/* ---------- En vivo (Finnhub) ---------- */
+const log = m => { const el=$("#log"); el.textContent = `[${new Date().toLocaleTimeString("es-MX")}] ${m}\n` + el.textContent.split("\n").slice(0,6).join("\n"); };
+let timer = null, lastLive = null;
+async function fh(path, key){ const r = await fetch(`https://finnhub.io/api/v1/${path}&token=${encodeURIComponent(key)}`); if (r.status===401||r.status===403) throw new Error("clave no válida"); if (r.status===429) throw new Error("demasiadas consultas; espera un minuto"); if (!r.ok) throw new Error("HTTP "+r.status); return r.json(); }
+async function refresh(withRec){
+  const key = store.get("fhKey",""); if (!key) return;
+  const syms = ITEMS.filter(i=>i.fh).map(i=>i.sym); let ok=0;
+  try{
+    for (const s of syms){ const q = await fh(`quote?symbol=${s}`, key); if (q && q.c){ live[s] = {c:q.c, pc:q.pc, t:q.t}; ok++; } }
+    if (withRec) for (const s of syms.filter(s=>BY[s].kind==="stk")){ const r = await fh(`stock/recommendation?symbol=${s}`, key); if (Array.isArray(r) && r[0]) liveRec[s] = r[0]; }
+    lastLive = new Date(); log(`Precios actualizados (${ok}).${withRec?" Calificaciones de analistas actualizadas.":""}`);
+    renderAll();
+  }catch(e){ log("No se pudo actualizar: " + e.message + "."); renderStatus(e.message); }
+}
+function startLive(){ if (timer) clearInterval(timer); if (!store.get("fhKey","")) return; refresh(true); timer = setInterval(()=>refresh(false), 5*60*1000); }
+$("#k-fh").value = store.get("fhKey","");
+$("#k-go").addEventListener("click",()=>{ const k = $("#k-fh").value.trim(); if (!k) return log("Pega tu clave de Finnhub primero. Créala gratis en finnhub.io/register."); store.set("fhKey",k); log("Clave guardada. Consultando…"); startLive(); });
+$("#k-del").addEventListener("click",()=>{ store.del("fhKey"); $("#k-fh").value=""; if (timer) clearInterval(timer); for (const k in live) delete live[k]; for (const k in liveRec) delete liveRec[k]; lastLive=null; log("Clave borrada. Se usan los precios del último cierre."); renderAll(); });
+document.addEventListener("visibilitychange",()=>{ if (!document.hidden && lastLive && Date.now()-lastLive > 5*60*1000) refresh(false); });
+
+function renderStatus(err){
+  const el = $("#status");
+  const hhmm = d => d.toLocaleTimeString("es-MX",{hour:"2-digit",minute:"2-digit"});
+  if (lastLive) el.innerHTML = `<span class="dot live"></span><span>En vivo · ${hhmm(lastLive)} · se actualiza cada 5 min</span>`;
+  else if (yahooHora && bolsaAbierta()) el.innerHTML = `<span class="dot live"></span><span>Actualizado ${hhmm(yahooHora)} · cada 15 min, con ~15 min de retraso</span>`;
+  else el.innerHTML = `<span class="dot"></span><span>Cierre del ${fdate(DATA.asof)}${err?" · sin conexión en vivo":""}${MODO==="app" ? " · se actualiza cada día" : ` · <a href="#guias" style="color:inherit">activar en vivo</a>`}</span>`;
+  $("#gen").textContent = `Datos de cierre generados el ${DATA.generado}. Precios de Yahoo Finance (cierres diarios). Pueden tener retraso de 15 minutos o más; fuera del horario de bolsa se muestra el último cierre.`;
+}
+function renderAll(){ renderStatus(); renderHoy(); if (!$('[data-view="explorar"]').hidden) renderDetail(); if (!$('[data-view="dinero"]').hidden) renderMoney(); }
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",()=>{ if (!$('[data-view="explorar"]').hidden) drawChart(); });
+
+renderAll();
+show(location.hash.slice(1) || "hoy");
+if (MODO==="app") $("#ajustes").innerHTML = `<h3>Precios de esta app</h3><p class="small">Esta versión muestra el cierre de cada día y se actualiza sola todos los días a las 4 p. m. Para ver precios cada 5 minutos, abre en tu Mac el archivo panel-inversion.html de la carpeta Mi Panel de Inversión.</p><p class="small muted" id="gen"></p>`;
+renderStatus();
+if (MODO!=="app") startLive();
+// precios.json: lo actualiza GitHub Actions cada 15 minutos mientras la bolsa está abierta (solo en la versión web).
+async function cargarPrecios(){
+  if (MODO!=="web") return;
+  try{
+    const r = await fetch("precios.json?t=" + Date.now(), {cache:"no-store"});
+    if (!r.ok) return;
+    const j = await r.json();
+    for (const k in j.p) yahoo[k] = j.p[k];
+    yahooHora = new Date(j.generado);
+    renderAll();
+  }catch(e){}
+}
+cargarPrecios();
+setInterval(cargarPrecios, 5*60*1000);
+document.addEventListener("visibilitychange",()=>{ if (!document.hidden) cargarPrecios(); });
+// Pide al navegador que no borre los datos guardados (clave de Finnhub y Mi dinero).
+try{ navigator.storage && navigator.storage.persist && navigator.storage.persist(); }catch(e){}
+</script>
+</body>
+</html>
