@@ -5,7 +5,7 @@
 set -e
 cd "${0:A:h}/.."
 export PATH="$HOME/.local/bin:$PATH"
-git pull -q --rebase origin main
+git pull -q --rebase --autostash origin main
 git add motor
 if git diff --cached --quiet; then
   echo "Sin cambios en el motor."

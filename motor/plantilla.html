@@ -663,11 +663,13 @@ show(location.hash.slice(1) || "hoy");
 if (MODO==="app") $("#ajustes").innerHTML = `<h3>Precios de esta app</h3><p class="small">Esta versión muestra el cierre de cada día y se actualiza sola todos los días a las 4 p. m. Para ver precios cada 5 minutos, abre en tu Mac el archivo panel-inversion.html de la carpeta Mi Panel de Inversión.</p><p class="small muted" id="gen"></p>`;
 renderStatus();
 if (MODO!=="app") startLive();
-// precios.json: lo actualiza GitHub Actions cada 15 minutos mientras la bolsa está abierta (solo en la versión web).
+// precios.json: lo actualiza GitHub Actions cada 15 minutos mientras la bolsa está abierta.
 async function cargarPrecios(){
-  if (MODO!=="web") return;
+  // La versión de claude.ai no puede consultar sitios externos; la de tu Mac lee el archivo publicado en GitHub.
+  if (MODO==="app") return;
+  const url = MODO==="web" ? "precios.json" : "https://wheresmymoneyy.github.io/hmm-d41f7a387f/precios.json";
   try{
-    const r = await fetch("precios.json?t=" + Date.now(), {cache:"no-store"});
+    const r = await fetch(url + "?t=" + Date.now(), {cache:"no-store"});
     if (!r.ok) return;
     const j = await r.json();
     for (const k in j.p) yahoo[k] = j.p[k];
