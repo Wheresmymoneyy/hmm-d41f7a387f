@@ -17,7 +17,7 @@
     },
     "fuente": "Stock Analysis (datos de S&P Global)",
     "url": "https://stockanalysis.com/stocks/aapl/forecast/",
-    "fecha": "2026-10-15"
+    "fecha": "2026-10-16"
   },
   "MSFT": {
     "consenso": "Compra fuerte",
@@ -30,7 +30,7 @@
       "ventaFuerte": 0
     },
     "objetivo": {
-      "promedio": 596.22,
+      "promedio": 599.24,
       "bajo": 440,
       "alto": 870
     },
@@ -74,7 +74,7 @@
     },
     "fuente": "Stock Analysis (datos de S&P Global)",
     "url": "https://stockanalysis.com/stocks/nvda/forecast/",
-    "fecha": "2026-10-09"
+    "fecha": "2026-10-14"
   },
   "GOOGL": {
     "consenso": "Compra fuerte",
@@ -93,7 +93,7 @@
     },
     "fuente": "Stock Analysis (datos de S&P Global)",
     "url": "https://stockanalysis.com/stocks/googl/forecast/",
-    "fecha": "2026-10-15"
+    "fecha": "2026-10-16"
   },
   "META": {
     "consenso": "Compra fuerte",
@@ -106,7 +106,7 @@
       "ventaFuerte": 1
     },
     "objetivo": {
-      "promedio": 813.65,
+      "promedio": 814.51,
       "bajo": 580,
       "alto": 1050
     },
@@ -131,7 +131,7 @@
     },
     "fuente": "Stock Analysis (datos de S&P Global)",
     "url": "https://stockanalysis.com/stocks/avgo/forecast/",
-    "fecha": "2026-10-02"
+    "fecha": "2026-10-15"
   },
   "TSLA": {
     "consenso": "Compra",
@@ -163,7 +163,7 @@
       "ventaFuerte": 0
     },
     "objetivo": {
-      "promedio": 1561,
+      "promedio": 1560.57,
       "bajo": 361,
       "alto": 3000
     },
@@ -199,22 +199,22 @@
     "fuente": "Stock Analysis (datos de S&P Global), sobre el ADR que cotiza en Nueva York",
     "url": "https://stockanalysis.com/stocks/amx/forecast/",
     "fecha": "2026-10-14",
-    "aviso": "Es la misma empresa; los analistas la califican a través de su ADR (AMX). Su precio objetivo está en dólares por ADR (promedio US$29.34 contra US$22.43 de cierre), así que no se compara directo con el precio en pesos."
+    "aviso": "Es la misma empresa; los analistas la califican a través de su ADR (AMX). Su precio objetivo está en dólares por ADR (promedio US$29.34 contra US$24.29 de cierre), así que no se compara directo con el precio en pesos."
   },
   "FEMSAUBD.MX": {
     "consenso": "Compra",
     "analistas": 15,
     "conteo": {
       "compraFuerte": 5,
-      "compra": 2,
-      "mantener": 7,
+      "compra": 3,
+      "mantener": 6,
       "venta": 1,
       "ventaFuerte": 0
     },
     "fuente": "Stock Analysis (datos de S&P Global), sobre el ADR que cotiza en Nueva York",
     "url": "https://stockanalysis.com/stocks/fmx/forecast/",
-    "fecha": "2026-10-01",
-    "aviso": "Calificación a través de su ADR (FMX). Precio objetivo en dólares por ADR: promedio US$133.86 contra US$120.99 de cierre."
+    "fecha": "2026-10-16",
+    "aviso": "Calificación a través de su ADR (FMX). Precio objetivo en dólares por ADR: promedio US$135.64 contra US$127.98 de cierre."
   },
   "CEMEXCPO.MX": {
     "consenso": "Compra",
@@ -228,8 +228,8 @@
     },
     "fuente": "Stock Analysis (datos de S&P Global), sobre el ADR que cotiza en Nueva York",
     "url": "https://stockanalysis.com/stocks/cx/forecast/",
-    "fecha": "2026-10-13",
-    "aviso": "Calificación a través de su ADR (CX). Precio objetivo en dólares por ADR: promedio US$14.68 contra US$10.06 de cierre."
+    "fecha": "2026-10-15",
+    "aviso": "Calificación a través de su ADR (CX). Precio objetivo en dólares por ADR: promedio US$14.68 contra US$10.39 de cierre."
   },
   "WALMEX.MX": {
     "consenso": "Neutral",
@@ -268,7 +268,7 @@
     },
     "fuente": "Stock Analysis (datos de S&P Global), sobre el ADR que cotiza en Nueva York",
     "url": "https://stockanalysis.com/stocks/tm/forecast/",
-    "fecha": "2026-09-30",
+    "fecha": "2026-09-21",
     "aviso": "Solo 4 analistas: se cuentan quienes siguen su ADR en Nueva York, no los analistas de Japón. Los precios objetivo son del 14 may 2026, así que pueden estar desactualizados."
   },
   "SONY": {
@@ -288,7 +288,7 @@
     },
     "fuente": "Stock Analysis (datos de S&P Global), sobre el ADR que cotiza en Nueva York",
     "url": "https://stockanalysis.com/stocks/sony/forecast/",
-    "fecha": "2026-10-15",
+    "fecha": "2026-10-02",
     "aviso": "Solo 4 analistas: se cuentan quienes siguen su ADR en Nueva York, no los analistas de Japón. Los precios objetivo son del 10 jun 2026, así que pueden estar desactualizados."
   },
   "ORCL": {
@@ -308,7 +308,7 @@
     },
     "fuente": "Stock Analysis (datos de S&P Global)",
     "url": "https://stockanalysis.com/stocks/orcl/forecast/",
-    "fecha": "2026-10-12"
+    "fecha": "2026-10-15"
   },
   "UBER": {
     "consenso": "Compra",
@@ -327,7 +327,7 @@
     },
     "fuente": "Stock Analysis (datos de S&P Global)",
     "url": "https://stockanalysis.com/stocks/uber/forecast/",
-    "fecha": "2026-10-13"
+    "fecha": "2026-10-10"
   },
   "CETES": {
     "fuente": "Banxico, Encuesta sobre las Expectativas de los Especialistas en Economía del Sector Privado (septiembre 2026), vía IDC Online",
@@ -338,13 +338,13 @@
     "inflacionFin2026": 3.85,
     "dolarFin2026": 17.57,
     "plazos": {
-      "28": 6.25,
-      "91": 6.55,
-      "182": 6.79,
+      "28": 6.23,
+      "91": 6.75,
+      "182": 6.73,
       "364": 7.11
     },
-    "plazosFuente": "Subasta del 13 oct 2026 (cetes.app)",
+    "plazosFuente": "Subasta del 20 oct 2026 (cetes.app)",
     "plazosUrl": "https://cetes.app/cetes-hoy",
-    "plazosFecha": "2026-10-13"
+    "plazosFecha": "2026-10-20"
   }
 }
