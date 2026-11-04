@@ -11,51 +11,51 @@
       "ventaFuerte": 3
     },
     "objetivo": {
-      "promedio": 332.39,
-      "bajo": 245,
+      "promedio": 333.28,
+      "bajo": 250,
       "alto": 405
     },
     "fuente": "Stock Analysis (datos de S&P Global)",
     "url": "https://stockanalysis.com/stocks/aapl/forecast/",
-    "fecha": "2026-10-28"
+    "fecha": "2026-11-03"
   },
   "MSFT": {
     "consenso": "Compra fuerte",
     "analistas": 57,
     "conteo": {
-      "compraFuerte": 41,
-      "compra": 13,
-      "mantener": 3,
+      "compraFuerte": 40,
+      "compra": 12,
+      "mantener": 5,
       "venta": 0,
       "ventaFuerte": 0
     },
     "objetivo": {
-      "promedio": 605.12,
+      "promedio": 633.13,
       "bajo": 440,
       "alto": 870
     },
     "fuente": "Stock Analysis (datos de S&P Global)",
     "url": "https://stockanalysis.com/stocks/msft/forecast/",
-    "fecha": "2026-10-27"
+    "fecha": "2026-11-02"
   },
   "AMZN": {
     "consenso": "Compra fuerte",
-    "analistas": 60,
+    "analistas": 59,
     "conteo": {
       "compraFuerte": 42,
-      "compra": 16,
-      "mantener": 2,
+      "compra": 14,
+      "mantener": 3,
       "venta": 0,
       "ventaFuerte": 0
     },
     "objetivo": {
-      "promedio": 332.41,
+      "promedio": 326.74,
       "bajo": 230,
       "alto": 405
     },
     "fuente": "Stock Analysis (datos de S&P Global)",
     "url": "https://stockanalysis.com/stocks/amzn/forecast/",
-    "fecha": "2026-10-27"
+    "fecha": "2026-11-04"
   },
   "NVDA": {
     "consenso": "Compra fuerte",
@@ -68,32 +68,32 @@
       "ventaFuerte": 1
     },
     "objetivo": {
-      "promedio": 328.95,
+      "promedio": 327.14,
       "bajo": 180,
       "alto": 515
     },
     "fuente": "Stock Analysis (datos de S&P Global)",
     "url": "https://stockanalysis.com/stocks/nvda/forecast/",
-    "fecha": "2026-10-27"
+    "fecha": "2026-11-02"
   },
   "GOOGL": {
     "consenso": "Compra fuerte",
-    "analistas": 60,
+    "analistas": 58,
     "conteo": {
-      "compraFuerte": 42,
-      "compra": 13,
+      "compraFuerte": 43,
+      "compra": 10,
       "mantener": 5,
       "venta": 0,
       "ventaFuerte": 0
     },
     "objetivo": {
-      "promedio": 429.68,
-      "bajo": 340,
+      "promedio": 400.37,
+      "bajo": 300,
       "alto": 500
     },
     "fuente": "Stock Analysis (datos de S&P Global)",
     "url": "https://stockanalysis.com/stocks/googl/forecast/",
-    "fecha": "2026-10-27"
+    "fecha": "2026-11-03"
   },
   "META": {
     "consenso": "Compra fuerte",
@@ -112,7 +112,7 @@
     },
     "fuente": "Stock Analysis (datos de S&P Global)",
     "url": "https://stockanalysis.com/stocks/meta/forecast/",
-    "fecha": "2026-10-28"
+    "fecha": "2026-11-02"
   },
   "AVGO": {
     "consenso": "Compra fuerte",
@@ -125,32 +125,32 @@
       "ventaFuerte": 0
     },
     "objetivo": {
-      "promedio": 530.14,
+      "promedio": 526.81,
       "bajo": 215.88,
       "alto": 660
     },
     "fuente": "Stock Analysis (datos de S&P Global)",
     "url": "https://stockanalysis.com/stocks/avgo/forecast/",
-    "fecha": "2026-10-27"
+    "fecha": "2026-11-02"
   },
   "TSLA": {
     "consenso": "Compra",
-    "analistas": 43,
+    "analistas": 44,
     "conteo": {
-      "compraFuerte": 14,
+      "compraFuerte": 15,
       "compra": 5,
       "mantener": 22,
       "venta": 0,
       "ventaFuerte": 2
     },
     "objetivo": {
-      "promedio": 410.68,
+      "promedio": 413.1,
       "bajo": 128.11,
       "alto": 600
     },
     "fuente": "Stock Analysis (datos de S&P Global)",
     "url": "https://stockanalysis.com/stocks/tsla/forecast/",
-    "fecha": "2026-10-27"
+    "fecha": "2026-11-01"
   },
   "MU": {
     "consenso": "Compra fuerte",
@@ -158,8 +158,8 @@
     "conteo": {
       "compraFuerte": 36,
       "compra": 9,
-      "mantener": 3,
-      "venta": 1,
+      "mantener": 4,
+      "venta": 0,
       "ventaFuerte": 0
     },
     "objetivo": {
@@ -169,7 +169,7 @@
     },
     "fuente": "Stock Analysis (datos de S&P Global)",
     "url": "https://stockanalysis.com/stocks/mu/forecast/",
-    "fecha": "2026-10-27"
+    "fecha": "2026-11-03"
   },
   "GMEXICOB.MX": {
     "consenso": "Compra",
@@ -183,8 +183,8 @@
     },
     "fuente": "Investing.com",
     "url": "https://www.investing.com/equities/gmexico",
-    "fecha": "2026-10-28",
-    "aviso": "Consultado el 28 oct 2026; Investing.com resume las recomendaciones de los últimos 3 meses, sin fecha de cada una ni separar 'compra' de 'compra fuerte'. Dice que son 15 analistas, pero su desglose suma 14. Su precio objetivo promedio es $237.36, casi igual al precio actual ($235.31). GBM la incluye en su lista Top Picks 2026 con objetivo de $200."
+    "fecha": "2026-11-04",
+    "aviso": "Consultado el 4 nov 2026; Investing.com resume las recomendaciones de los últimos 3 meses, sin fecha de cada una ni separar 'compra' de 'compra fuerte'. Dice que son 15 analistas, pero su desglose suma 14. Su precio objetivo promedio es $236.09, contra un precio de $225.21. GBM la incluye en su lista Top Picks 2026 con objetivo de $200."
   },
   "AMXB.MX": {
     "consenso": "Compra",
@@ -198,8 +198,8 @@
     },
     "fuente": "Stock Analysis (datos de S&P Global), sobre el ADR que cotiza en Nueva York",
     "url": "https://stockanalysis.com/stocks/amx/forecast/",
-    "fecha": "2026-10-27",
-    "aviso": "Es la misma empresa; los analistas la califican a través de su ADR (AMX). Su precio objetivo está en dólares por ADR (promedio US$29.37 contra US$23.93 de cierre), así que no se compara directo con el precio en pesos."
+    "fecha": "2026-11-02",
+    "aviso": "Es la misma empresa; los analistas la califican a través de su ADR (AMX). Su precio objetivo está en dólares por ADR (promedio US$29.36 contra US$25.03 de cierre del 4 nov 2026), así que no se compara directo con el precio en pesos."
   },
   "FEMSAUBD.MX": {
     "consenso": "Compra",
@@ -213,23 +213,23 @@
     },
     "fuente": "Stock Analysis (datos de S&P Global), sobre el ADR que cotiza en Nueva York",
     "url": "https://stockanalysis.com/stocks/fmx/forecast/",
-    "fecha": "2026-10-23",
-    "aviso": "Calificación a través de su ADR (FMX). Precio objetivo en dólares por ADR: promedio US$134.86 contra US$123.70 de cierre."
+    "fecha": "2026-11-03",
+    "aviso": "Calificación a través de su ADR (FMX). Precio objetivo en dólares por ADR: promedio US$135.00 contra US$130.13 de cierre del 4 nov 2026."
   },
   "CEMEXCPO.MX": {
     "consenso": "Compra",
     "analistas": 15,
     "conteo": {
-      "compraFuerte": 5,
+      "compraFuerte": 6,
       "compra": 6,
-      "mantener": 4,
+      "mantener": 3,
       "venta": 0,
       "ventaFuerte": 0
     },
     "fuente": "Stock Analysis (datos de S&P Global), sobre el ADR que cotiza en Nueva York",
     "url": "https://stockanalysis.com/stocks/cx/forecast/",
-    "fecha": "2026-10-28",
-    "aviso": "Calificación a través de su ADR (CX). Precio objetivo en dólares por ADR: promedio US$14.64 contra US$10.52 de cierre."
+    "fecha": "2026-10-29",
+    "aviso": "Calificación a través de su ADR (CX). Precio objetivo en dólares por ADR: promedio US$14.80 contra US$10.93 de cierre del 4 nov 2026."
   },
   "WALMEX.MX": {
     "consenso": "Neutral",
@@ -242,14 +242,14 @@
       "ventaFuerte": 0
     },
     "objetivo": {
-      "promedio": 55.82,
+      "promedio": 55.88,
       "bajo": 42,
       "alto": 81
     },
     "fuente": "Investing.com",
     "url": "https://www.investing.com/equities/wal-mart-v",
-    "fecha": "2026-10-28",
-    "aviso": "Consultado el 28 oct 2026; Investing.com resume las recomendaciones de los últimos 3 meses, sin fecha de cada una ni separar 'compra' de 'compra fuerte'."
+    "fecha": "2026-11-04",
+    "aviso": "Consultado el 4 nov 2026; Investing.com resume las recomendaciones de los últimos 3 meses, sin fecha de cada una ni separar 'compra' de 'compra fuerte'."
   },
   "TM": {
     "consenso": "Compra",
@@ -293,22 +293,22 @@
   },
   "ORCL": {
     "consenso": "Compra",
-    "analistas": 43,
+    "analistas": 41,
     "conteo": {
       "compraFuerte": 28,
-      "compra": 7,
-      "mantener": 7,
+      "compra": 6,
+      "mantener": 6,
       "venta": 0,
       "ventaFuerte": 1
     },
     "objetivo": {
-      "promedio": 235.8,
+      "promedio": 235.46,
       "bajo": 110,
       "alto": 400
     },
     "fuente": "Stock Analysis (datos de S&P Global)",
     "url": "https://stockanalysis.com/stocks/orcl/forecast/",
-    "fecha": "2026-10-27"
+    "fecha": "2026-11-03"
   },
   "UBER": {
     "consenso": "Compra",
@@ -321,30 +321,30 @@
       "ventaFuerte": 1
     },
     "objetivo": {
-      "promedio": 100.86,
+      "promedio": 100.77,
       "bajo": 70,
       "alto": 150
     },
     "fuente": "Stock Analysis (datos de S&P Global)",
     "url": "https://stockanalysis.com/stocks/uber/forecast/",
-    "fecha": "2026-10-27"
+    "fecha": "2026-11-02"
   },
   "CETES": {
-    "fuente": "Banxico, Encuesta sobre las Expectativas de los Especialistas en Economía del Sector Privado (septiembre 2026), vía IDC Online",
-    "url": "https://idconline.mx/finanzas/2026/10/06/expectativas-banxico-2026-2027-tasas-de-interes-tipo-de-cambio-e-inflacion-para-el-cierre-de-ano",
-    "fecha": "2026-10-06",
-    "tasaFin2026": 6.51,
+    "fuente": "Banxico, Encuesta sobre las Expectativas de los Especialistas en Economía del Sector Privado (octubre 2026), promedios",
+    "url": "https://www.banxico.org.mx/publicaciones-y-prensa/encuestas-sobre-las-expectativas-de-los-especialis/%7BD4B6ED49-140C-AE4A-7D64-3CA5B1974667%7D.pdf",
+    "fecha": "2026-11-03",
+    "tasaFin2026": 6.49,
     "tasaFin2027": 6.51,
-    "inflacionFin2026": 3.85,
-    "dolarFin2026": 17.57,
+    "inflacionFin2026": 3.83,
+    "dolarFin2026": 18.25,
     "plazos": {
-      "28": 6.22,
+      "28": 6.5,
       "91": 6.69,
-      "182": 6.8,
+      "182": 6.72,
       "364": 7.12
     },
-    "plazosFuente": "Subasta del 27 oct 2026 (cetes.app)",
-    "plazosUrl": "https://cetes.app/cetes-hoy",
-    "plazosFecha": "2026-10-27"
+    "plazosFuente": "Subasta del 3 nov 2026 (Banxico SIE); el plazo de 364 días no se subastó esa semana, su tasa es de la subasta del 27 oct 2026",
+    "plazosUrl": "https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?sector=22&accion=consultarCuadro&idCuadro=CF107&locale=es",
+    "plazosFecha": "2026-11-03"
   }
 }
